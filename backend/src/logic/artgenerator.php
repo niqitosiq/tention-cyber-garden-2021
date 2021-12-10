@@ -25,20 +25,22 @@ class ArtGenerator {
         // Работаю с синонимами
         $synonymWords = array(); // string
         foreach ($words as $word) {
-            $synonymWords[] = $tt->getSynonyms($word, 2);
+            $synonyms = $tt->getSynonyms($word, 2);
+            foreach ($synonyms as $synonym) {
+                $synonymWords[] = $synonym;
+            }
             $wordsImg[] = $yimg->getRandomImagesByQ($word, 1)[0]; // Notice: обращение к YIMG
         }
         shuffle($synonymWords);
         $synonymWords = array_slice($synonymWords, 0, 4);
         foreach ($synonymWords as $synonymWord) {
-            $synonymImgs = $yimg->getRandomImagesByQ($synonymWord, 1)[0];
+            $synonymImgs[] = $yimg->getRandomImagesByQ($synonymWord, 1)[0];
         }
-
         $imgsBase64 = $danya->process($wordsImg, $commonImg, $synonymImgs, $phrase);
         $urls = array();
         foreach ($imgsBase64 as $imgBase64) {
             $id = time() . '_' . rand(1000000, 9999999) . '.png';
-            $ls->saveImageFromBase64($imgBase64, $id);
+            $ls->saveImageFromBase64($imgBase64->base64, $id);
             $urls[] = $_ENV['IMAGE_STORAGE_BASE_URL'] . $id;
         }
         return $urls;

@@ -6,7 +6,11 @@ namespace dvegasa\cg2021\integrations\texttransformer;
 class TextTransformer {
     // return string[] (size=n)
     function getSynonyms(string $word, int $n): array {
-        return array();
+        $res = array();
+        for ($i = 0; $i < $n; $i++) {
+            $res[] = '';
+        }
+        return $res;
     }
 
     // string[]
