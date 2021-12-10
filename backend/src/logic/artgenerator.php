@@ -5,6 +5,7 @@ namespace dvegasa\cg2021\logic\memegenerator;
 
 use dvegasa\cg2021\integrations\danyaapi\DanyaAI;
 use dvegasa\cg2021\integrations\texttransformer\TextTransformer;
+use dvegasa\cg2021\integrations\yandeximages\YandexImages;
 use dvegasa\cg2021\models\ImageURL;
 use dvegasa\cg2021\storage\localstorage\LocalStorage;
 
@@ -12,24 +13,34 @@ class ArtGenerator {
     function generateByWords (array $words): array {
         $tt = new TextTransformer();
         $ls = new LocalStorage();
+        $yimg = new YandexImages();
+        $danya = new DanyaAI();
 
-        $originalWords = $words;
-        $synonymWords = array();
-        foreach ($originalWords as $originalWord) {
-            $synonymWords[] = $tt->getSynonyms($originalWord, 2);
+        // Для DanyaAI
+        $wordsImg = array(); // ImageURL[]
+        $synonymImgs = array(); // ImageURL[]
+        $commonImg = $yimg->getRandomImagesByQ(implode(' ', $words), 1)[0];
+        $phrase = $tt->getCommonPhrase($words);
+
+        // Работаю с синонимами
+        $synonymWords = array(); // string
+        foreach ($words as $word) {
+            $synonymWords[] = $tt->getSynonyms($word, 2);
+            $wordsImg[] = $yimg->getRandomImagesByQ($word, 1)[0]; // Notice: обращение к YIMG
         }
         shuffle($synonymWords);
-        $commonImg = new ImageURL('');
-        $phrase = $tt->getCommonPhrase($originalWords);
-
-        $danya = new DanyaAI();
-        $imgsBase64 = $danya->process($originalWords, $commonImg, array_slice($synonymWords, 0, 4), $phrase);
-        $fileNames = array();
-        foreach ($imgsBase64 as $imgBase64) {
-            $id = time() . '_' . rand(1000000, 9999999);
-            $ls->saveImageFromBase64($imgBase64, $id);
-            $fileNames[] = $id;
+        $synonymWords = array_slice($synonymWords, 0, 4);
+        foreach ($synonymWords as $synonymWord) {
+            $synonymImgs = $yimg->getRandomImagesByQ($synonymWord, 1)[0];
         }
-        return $fileNames;
+
+        $imgsBase64 = $danya->process($wordsImg, $commonImg, $synonymImgs, $phrase);
+        $urls = array();
+        foreach ($imgsBase64 as $imgBase64) {
+            $id = time() . '_' . rand(1000000, 9999999) . '.png';
+            $ls->saveImageFromBase64($imgBase64, $id);
+            $urls[] = $_ENV['IMAGE_STORAGE_BASE_URL'] . $id;
+        }
+        return $urls;
     }
 }

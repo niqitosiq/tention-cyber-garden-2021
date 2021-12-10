@@ -11,7 +11,7 @@ class DanyaAI {
             ImageURL $common,
             array $forSynonyms, // ImageURL[] (size=4)
             string $phrase,
-    ): array { // ImageURL[] (size=?)
+    ): array { // ImageBase64[] (size=?)
         // TODO
         return array();
     }
