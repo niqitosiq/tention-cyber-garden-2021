@@ -28,10 +28,10 @@ class TextTransformer {
         return $json?->response?->topics ?? array();
     }
 
-    protected function ppSynonyms (string $q): array {
+    protected function ppSynonyms (string $q, int $top=25): array {
         $args = "&query=$q";
         $args .= '&c=syns';
-        $args .= '&top=25';
+        $args .= "&top=$top";
         $args .= '&forms=0';
         $args .= '&scores=0';
         $response = $this->paraphraserCall($args);
@@ -41,12 +41,9 @@ class TextTransformer {
     }
 
     // return string[] (size=n)
-    function getSynonyms(string $word, int $n): array {
-        $res = array();
-        for ($i = 0; $i < $n; $i++) {
-            $res[] = '';
-        }
-        return $res;
+    function getSynonyms(string $q, int $n): array {
+        $syns = $this->ppSynonyms($q, 2);
+        return $syns;
     }
 
     // string[]
