@@ -22,7 +22,7 @@ class RestServer {
     protected function setupRouting(App $app) {
         $app->group('/api', function(RouteCollectorProxy $api) {
             $api->any('/ping', array($this, 'ping'));
-            $api->post('/requestMemes', array($this, 'requestMemes'));
+            $api->post('/generateArt', array($this, 'generateArt'));
             $api->get('/images/{name}', array($this, 'images'));
         });
         $app->options('/{routes:.+}', function ($request, $response, $args) {
@@ -70,7 +70,7 @@ class RestServer {
         ));
     }
 
-    function requestMemes (Request $request, Response $response): Response {
+    function generateArt (Request $request, Response $response): Response {
         $params = $this->getPostParams($request);
 
         if (!isset($params['words'])) return $this->response($response, array('error' => '[words] required'), 400);
