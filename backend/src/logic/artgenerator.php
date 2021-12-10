@@ -5,7 +5,7 @@ namespace dvegasa\cg2021\logic\memegenerator;
 
 use dvegasa\cg2021\integrations\danyaapi\DanyaAI;
 use dvegasa\cg2021\integrations\texttransformer\TextTransformer;
-use dvegasa\cg2021\integrations\yandeximages\YandexImages;
+use dvegasa\cg2021\integrations\images\Images;
 use dvegasa\cg2021\models\ImageURL;
 use dvegasa\cg2021\storage\localstorage\LocalStorage;
 
@@ -13,7 +13,7 @@ class ArtGenerator {
     function generateByWords (array $words): array {
         $tt = new TextTransformer();
         $ls = new LocalStorage();
-        $yimg = new YandexImages();
+        $yimg = new Images();
         $danya = new DanyaAI();
 
         // Для DanyaAI
