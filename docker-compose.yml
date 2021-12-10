@@ -20,7 +20,7 @@ services:
     ports:
       - '5000:5000'
     volumes:
-      - ./backend/:/usr/src/app
+      - ./kontur/:/usr/src/app
     networks:
       - webnet
   postgresdb:
