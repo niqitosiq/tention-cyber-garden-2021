@@ -1,20 +1,15 @@
-FROM php:8.0-rc-cli
+FROM php:8.0-apache
 
-COPY opcache.ini /usr/local/etc/php/conf.d/
+ARG debug
 
-RUN apt-get update && apt-get upgrade -y \
-    && apt-get install apt-utils -y \
-#
-#    устанавливаем необходимые пакеты
-    && apt-get install git zip vim libzip-dev libgmp-dev libffi-dev libssl-dev -y \
-#
-#    Включаем необходимые расширения
-    && docker-php-ext-install -j$(nproc) sockets zip gmp pcntl bcmath ffi \
-#
-#    Расшерения через pecl ставятся так, то в php 8 pecl сейчас отсутствует, так что строки закоментированы
-#    && PHP_OPENSSL=yes pecl install ev \
-#    && docker-php-ext-enable ev \
-#
-#    Чистим временные файлы
-    && docker-php-source delete \
-    && apt-get autoremove --purge -y && apt-get autoclean -y && apt-get clean -y
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions \
+    && install-php-extensions pdo_pgsql
+
+COPY db /var/www/db
+COPY src /var/www/src
+COPY vendor /var/www/vendor
+COPY web /var/www/html
+COPY assets /var/www/assets
+
+CMD php -f /var/www/src/entrypoint.php -- migrate-db structures && apache2-foreground
