@@ -2,9 +2,10 @@
 
 namespace dvegasa\cg2021\server\restserver;
 
-use Exception;
+use dvegasa\cg2021\logic\memegenerator\ArtGenerator;
 use Slim\App;
 use Slim\Factory\AppFactory;
+use Slim\Psr7\Factory\StreamFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Slim\Routing\RouteCollectorProxy;
@@ -22,6 +23,7 @@ class RestServer {
         $app->group('/api', function(RouteCollectorProxy $api) {
             $api->any('/ping', array($this, 'ping'));
             $api->post('/requestMemes', array($this, 'requestMemes'));
+            $api->get('/images/{name}', array($this, 'images'));
         });
         $app->options('/{routes:.+}', function ($request, $response, $args) {
             return $response;
@@ -74,8 +76,23 @@ class RestServer {
         if (!isset($params['words'])) return $this->response($response, array('error' => '[words] required'), 400);
         if (count($params['words']) !== 4) return $this->response($response, array('error'=>'need 4 words'), 400);
 
-        return $this->response($response, array('ok'));
+        $ag = new ArtGenerator();
+        $urls = $ag->generateByWords($params['words']);
+        return $this->response($response, array(
+                'urls' => $urls,
+        ));
+    }
+
+    function images (Request $request, Response $response, array $args): Response {
+        $name = $args['name'];
+        $file = __DIR__ . '\\..\\..\\storage\\images\\' . $name;
+        if (!file_exists($file)) return $this->response($response, array('error' => 'Not found', 'path' => $file), 404);
+        $image = file_get_contents($file);
+        return $response
+                ->withBody((new StreamFactory())->createStream($image))
+                ->withHeader('Content-Type', 'image/png');
+
     }
 }
 
-https://yandex.ru/images/search?text=ЯЯЯ
+
