@@ -3,10 +3,11 @@
 namespace dvegasa\cg2021\main;
 
 use Dotenv\Dotenv;
+use dvegasa\cg2021\server\restserver\RestServer;
 
 function main (array $args): void {
     loadEnvVars();
-    echo 'Hello, world!';
+    $restServer = new RestServer();
 }
 
 function loadEnvVars() {
