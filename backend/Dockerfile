@@ -1,15 +1,13 @@
-FROM php:8.0-apache
+FROM php:8.0.0rc1-fpm
 
-ARG debug
+# Install system dependencies
+RUN apt-get update && apt-get install -y git
 
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN chmod +x /usr/local/bin/install-php-extensions \
-    && install-php-extensions pdo_pgsql
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql
 
-COPY db /var/www/db
-COPY src /var/www/src
-COPY vendor /var/www/vendor
-COPY web /var/www/html
-COPY assets /var/www/assets
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-CMD php -f /var/www/src/entrypoint.php -- migrate-db structures && apache2-foreground
+# Set working directory
+WORKDIR /var/www
