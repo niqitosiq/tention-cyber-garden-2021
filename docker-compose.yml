@@ -5,6 +5,8 @@ services:
     build:
       context: ./backend/
       dockerfile: Dockerfile
+    stdin_open: true
+    tty: true
     depends_on:
       - postgresdb
     ports:
@@ -71,7 +73,6 @@ services:
 networks:
   webnet:
     driver: bridge
-    name: webnet
 
 volumes:
   postgres:
