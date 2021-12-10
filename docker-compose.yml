@@ -5,12 +5,15 @@ services:
     build:
       context: ./backend/
       dockerfile: Dockerfile
+    depends_on:
+      - postgresdb
     ports:
       - '3000:3000'
     volumes:
       - ./backend/:/usr/src/app
     networks:
       - webnet
+
   kontur:
     build:
       context: ./kontur/
@@ -23,6 +26,19 @@ services:
       - ./kontur/:/usr/src/app
     networks:
       - webnet
+
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./frontend/:/usr/src/app
+    networks:
+      - webnet
+    command: 'yarn serve'
+
   postgresdb:
     image: postgres
     environment:
@@ -37,11 +53,11 @@ services:
       - .env
     ports:
       - '5432:5432'
-      
+
 networks:
   webnet:
     driver: bridge
     name: webnet
 
-volumes: 
-  postgres: 
+volumes:
+  postgres:
