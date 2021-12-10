@@ -2,6 +2,7 @@
 
 namespace dvegasa\cg2021\server\restserver;
 
+use Exception;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Request;
@@ -19,7 +20,8 @@ class RestServer {
 
     protected function setupRouting(App $app) {
         $app->group('/api', function(RouteCollectorProxy $api) {
-            $api->get('/ping', array($this, 'ping'));
+            $api->any('/ping', array($this, 'ping'));
+            $api->post('/requestMemes', array($this, 'requestMemes'));
         });
         $app->options('/{routes:.+}', function ($request, $response, $args) {
             return $response;
@@ -65,4 +67,15 @@ class RestServer {
                 ),
         ));
     }
+
+    function requestMemes (Request $request, Response $response): Response {
+        $params = $this->getPostParams($request);
+
+        if (!isset($params['words'])) return $this->response($response, array('error' => '[words] required'), 400);
+        if (count($params['words']) !== 4) return $this->response($response, array('error'=>'need 4 words'), 400);
+
+        return $this->response($response, array('ok'));
+    }
 }
+
+https://yandex.ru/images/search?text=ЯЯЯ
