@@ -1,4 +1,4 @@
-FROM python:3.6.1-alpine
+FROM jjanzic/docker-python3-opencv
 RUN apk update \
     apk add \
     build-base \
