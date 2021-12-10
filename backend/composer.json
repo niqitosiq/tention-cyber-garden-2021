@@ -4,7 +4,8 @@
         "slim/slim": "4.*",
         "slim/psr7": "^1.5",
         "ext-pdo": "*",
-        "cakephp/chronos": "^2.3"
+        "cakephp/chronos": "^2.3",
+        "guzzlehttp/guzzle": "^7.4"
     },
     "autoload": {
         "classmap": [
