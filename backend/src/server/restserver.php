@@ -2,6 +2,7 @@
 
 namespace dvegasa\cg2021\server\restserver;
 
+use dvegasa\cg2021\integrations\images\Images;
 use dvegasa\cg2021\logic\memegenerator\ArtGenerator;
 use Slim\App;
 use Slim\Factory\AppFactory;
@@ -24,6 +25,7 @@ class RestServer {
             $api->any('/ping', array($this, 'ping'));
             $api->post('/generateArt', array($this, 'generateArt'));
             $api->get('/images/{name}', array($this, 'images'));
+            $api->any('/test/{param}', array($this, 'test'));
         });
         $app->options('/{routes:.+}', function ($request, $response, $args) {
             return $response;
@@ -92,6 +94,13 @@ class RestServer {
                 ->withBody((new StreamFactory())->createStream($image))
                 ->withHeader('Content-Type', 'image/png');
 
+    }
+
+    function test (Request $request, Response $response, array $args): Response {
+        $param = $args['param'];
+        $images = new Images();
+        $images->getRandomImagesByQ($param, 2);
+        return $this->response($response, array('ok'));
     }
 }
 

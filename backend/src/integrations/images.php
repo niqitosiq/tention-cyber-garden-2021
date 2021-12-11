@@ -3,6 +3,7 @@
 namespace dvegasa\cg2021\integrations\images;
 
 use dvegasa\cg2021\models\ImageURL;
+use Exception;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
@@ -19,25 +20,47 @@ class Images {
         try {
             $response = $client->get($url);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             var_dump('EXCEPTION', $e->getMessage());
         }
         return $response;
     }
 
-    // return ImagesURL[]
-    function getRandomImagesByQ(string $q, int $n): array {
+    protected function getFlickUrl(string $serverId, string $id, string $secret): string {
+        return "https://live.staticflickr.com/$serverId/${id}_${secret}_b.jpg";
+    }
+
+    function getImagesByQ(string $q, int $n, string $sort='date-posted-desc'): array {
         $args = "&text=$q";
         $args .= "&perPage=$n";
         $args .= '&method=flickr.photos.search';
+        $args .= "&sort=$sort";
         $response = $this->flickrCall($args);
         $json = json_decode($response->getBody());
-        var_dump('getRandomImagesByQ', $json);
+        return $json->photos->photo;
+    }
 
+    // return ImagesURL[]
+    function getRandomImagesByQ(string $q, int $n): array {
+        $sorts = array(
+                'date-posted-asc',
+                'date-posted-desc',
+                'date-taken-asc',
+                'date-taken-desc',
+                'interestingness-desc',
+//                'interestingness-asc',
+                'relevance',
+        );
+        shuffle($sorts);
+        echo print_r($sorts[0], true);
+        $photos = $this->getImagesByQ($q, 500, $sorts[0]);
+        shuffle($photos);
+        $photos = array_slice($photos, 0, $n);
         $res = array();
-        for ($i = 0; $i < $n; $i++) {
-            $res[] = new ImageURL('');
+        foreach ($photos as $photo) {
+            $res[] = new ImageURL($this->getFlickUrl($photo->server, $photo->id, $photo->secret));
         }
+        echo print_r($res, true);
         return $res;
     }
 }
