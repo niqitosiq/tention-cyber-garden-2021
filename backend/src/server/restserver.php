@@ -46,7 +46,7 @@ class RestServer {
 
     protected function response (Response $r, $body=null, $code=200): Response {
         if ($body !== null) {
-            $r->getBody()->write(json_encode($body));
+            $r->getBody()->write(json_encode($body, JSON_PRETTY_PRINT, JSON_UNESCAPED_UNICODE));
         } else {
             $r->getBody()->write('');
         }
@@ -83,10 +83,10 @@ class RestServer {
         Debugger::init();
         Debugger::log('restserver.php', 'Start generating');
         $ag = new ArtGenerator();
-        $urls = $ag->generateByWords($params['words']);
+        $result = $ag->generateByWords($params['words']);
         return $this->response($response, array(
-                'urls' => $urls,
                 'debugRun' => Debugger::$RUN,
+                'result' => $result,
         ));
     }
 

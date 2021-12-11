@@ -36,7 +36,7 @@ class ArtGenerator {
         shuffle($synonymWords);
         $synonymWords = array_slice($synonymWords, 0, 4);
         foreach ($synonymWords as $synonymWord) {
-            $synonymImgs[] = $yimg->getRandomImagesByQ($synonymWord, 1)[0];
+            $synonymImgs[] = @$yimg->getRandomImagesByQ($synonymWord, 1)[0];
         }
         $imgsBase64 = $danya->process($wordsImg, $commonImg, $synonymImgs, $phrase);
         $urls = array();
@@ -45,6 +45,15 @@ class ArtGenerator {
             $ls->saveImageFromBase64($imgBase64->base64, $id);
             $urls[] = $_ENV['IMAGE_STORAGE_BASE_URL'] . $id;
         }
-        return $urls;
+        return array(
+                'results' => $urls,
+                'sources' => array (
+                        '$synonymWords' => $synonymWords,
+                        'phrase' => $phrase,
+                        'wordsImg' => $wordsImg,
+                        'commonImg' => $commonImg,
+                        'synonymImgs' => $synonymImgs,
+                ),
+        );
     }
 }
