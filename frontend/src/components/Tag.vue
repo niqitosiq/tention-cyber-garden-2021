@@ -15,7 +15,7 @@ export default {
 
 <style lang="scss">
     .tag {
-        background-color: rgba(86,238,244,0.6);
+        background-color: rgba(86, 238, 244, 0.6);
         border-radius: 6px;
         padding: 6px 13px 6px 13px;
         color: white;

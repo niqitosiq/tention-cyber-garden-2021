@@ -18,7 +18,7 @@ export default {
 .background {
   &::after {
     content: "";
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     background-color: #000;
@@ -28,7 +28,7 @@ export default {
     z-index: -1;
   }
   img {
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     top: 0;
