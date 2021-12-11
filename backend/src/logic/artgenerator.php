@@ -10,6 +10,7 @@ use dvegasa\cg2021\models\ImageURL;
 use dvegasa\cg2021\storage\localstorage\LocalStorage;
 
 class ArtGenerator {
+
     function generateByWords (array $words): array {
         $tt = new TextTransformer();
         $ls = new LocalStorage();
@@ -19,7 +20,7 @@ class ArtGenerator {
         // Для DanyaAI
         $wordsImg = array(); // ImageURL[]
         $synonymImgs = array(); // ImageURL[]
-//        $commonImg = $yimg->getRandomImagesByQ(implode(' ', $words), 1)[0];
+//        $commonImg = $yimg->getRandomImagesByQ(implode(' ', $words), 1)[0]; // TODO: Поиск общей фотографии
         $commonImg = $yimg->getRandomImagesByQ($words[1], 1)[0];
         $phrase = $tt->getCommonPhrase($words);
 
@@ -30,7 +31,7 @@ class ArtGenerator {
             foreach ($synonyms as $synonym) {
                 $synonymWords[] = $synonym;
             }
-            $wordsImg[] = $yimg->getRandomImagesByQ($word, 1)[0]; // Notice: обращение к YIMG
+            $wordsImg[] = $yimg->getRandomImagesByQ($word, 1)[0];
         }
         shuffle($synonymWords);
         $synonymWords = array_slice($synonymWords, 0, 4);

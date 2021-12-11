@@ -101,3 +101,4 @@ $RECYCLE.BIN/
 /vendor
 .env
 /storage
+/debug

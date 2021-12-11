@@ -2,6 +2,7 @@
 
 namespace dvegasa\cg2021\server\restserver;
 
+use dvegasa\cg2021\debugger\Debugger;
 use dvegasa\cg2021\integrations\images\Images;
 use dvegasa\cg2021\logic\memegenerator\ArtGenerator;
 use Slim\App;
@@ -10,6 +11,7 @@ use Slim\Psr7\Factory\StreamFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Slim\Routing\RouteCollectorProxy;
+use Symfony\Component\Debug\Debug;
 
 class RestServer {
     function __construct () {
@@ -78,10 +80,13 @@ class RestServer {
         if (!isset($params['words'])) return $this->response($response, array('error' => '[words] required'), 400);
         if (count($params['words']) !== 4) return $this->response($response, array('error'=>'need 4 words'), 400);
 
+        Debugger::init();
+        Debugger::log('restserver.php', 'Start generating');
         $ag = new ArtGenerator();
         $urls = $ag->generateByWords($params['words']);
         return $this->response($response, array(
                 'urls' => $urls,
+                'debugRun' => Debugger::$RUN,
         ));
     }
 
