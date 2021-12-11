@@ -3,16 +3,39 @@
 namespace dvegasa\cg2021\integrations\danyaapi;
 
 
+use dvegasa\cg2021\debugger\Debugger;
 use dvegasa\cg2021\models\ImageBase64;
 use dvegasa\cg2021\models\ImageURL;
+use Exception;
+use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Psr7\Response;
 
 class DanyaAI {
+    protected function danyaCall (string $method, array $json=null): ResponseInterface {
+        $url = 'http://192.168.43.237:3001/api/';
+        $url .= $method;
+        $client = new Client([
+                'verify' => false
+        ]);
+        $options = array();
+        if ($json) $options = array('json' => $json);
+
+        $response = $client->post($url, $options);
+        return $response;
+    }
+
     function process (
-            array $forWords, // ImageURL[] (size=4)
-            ImageURL $common,
-            array $forSynonyms, // ImageURL[] (size=4)
-            string $phrase,
+            array $magic
     ): array { // ImageBase64[] (size=?)
+        Debugger::log('DAI', print_r($magic, true));
+        $response = $this->danyaCall('getContour_lightMap', $magic);
+        $body = $response->getBody();
+//        echo print_r($response, true);
+        // echo $body;
+//        header("Content-type: image/png");
+//        echo base64_decode($body);
+        return array(new ImageBase64($body));
 //        var_dump('---DanyaAI start---');
 //        var_dump('$forWords', $forWords);
 //        var_dump('$common', $common);

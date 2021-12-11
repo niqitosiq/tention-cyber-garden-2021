@@ -3,8 +3,10 @@
 namespace dvegasa\cg2021\server\restserver;
 
 use dvegasa\cg2021\debugger\Debugger;
+use dvegasa\cg2021\integrations\danyaapi\DanyaAI;
 use dvegasa\cg2021\integrations\images\Images;
 use dvegasa\cg2021\logic\memegenerator\ArtGenerator;
+use dvegasa\cg2021\models\ImageURL;
 use dvegasa\cg2021\storage\localstorage\LocalStorage;
 use Slim\App;
 use Slim\Factory\AppFactory;
@@ -110,9 +112,14 @@ class RestServer {
 
     function test (Request $request, Response $response, array $args): Response {
         $param = $args['param'];
-        $images = new Images();
-        $images->getRandomImagesByQ($param, 2);
-        return $this->response($response, array('ok'));
+        $danya = new DanyaAI();
+        $result = $danya->process(
+                ["виртуальное", "помещение", "кинотеатр", "технологии"],
+                new ImageURL('https://live.staticflickr.com/5706/22842871554_f246165ae3_b.jpg'),
+                [new ImageURL('https://live.staticflickr.com/8260/29479118673_19dbdef58a_b.jpg')],
+                'методика',
+        );
+        return $this->response($response, array());
     }
 }
 
