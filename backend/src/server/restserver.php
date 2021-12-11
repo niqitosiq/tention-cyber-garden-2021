@@ -5,6 +5,7 @@ namespace dvegasa\cg2021\server\restserver;
 use dvegasa\cg2021\debugger\Debugger;
 use dvegasa\cg2021\integrations\images\Images;
 use dvegasa\cg2021\logic\memegenerator\ArtGenerator;
+use dvegasa\cg2021\storage\localstorage\LocalStorage;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Factory\StreamFactory;
@@ -28,6 +29,7 @@ class RestServer {
             $api->post('/generateArt', array($this, 'generateArt'));
             $api->get('/images/{name}', array($this, 'images'));
             $api->any('/test/{param}', array($this, 'test'));
+            $api->get('/history/{n}', array($this, 'history'));
         });
         $app->options('/{routes:.+}', function ($request, $response, $args) {
             return $response;
@@ -98,7 +100,12 @@ class RestServer {
         return $response
                 ->withBody((new StreamFactory())->createStream($image))
                 ->withHeader('Content-Type', 'image/png');
+    }
 
+    function history (Request $request, Response $response, array $args): Response {
+        $n = $args['n'];
+        $lastImages = (new LocalStorage())->getLastNImages((int)$n);
+        return $this->response($response, (array) $lastImages);
     }
 
     function test (Request $request, Response $response, array $args): Response {
