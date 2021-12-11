@@ -74,7 +74,6 @@ export default {
     border: none;
     padding-top: 20px;
     padding-bottom: 20px;
-    max-width: 250px;
     width: 100%;
     padding-left: 18px;
     outline: none;

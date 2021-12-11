@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import View from '../views/View.vue';
+import Loading from '../views/Loading.vue';
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/view',
     name: 'View',
     component: View,
+  },
+  {
+    path: '/loading',
+    name: 'Loading',
+    component: Loading,
   },
 ];
 
