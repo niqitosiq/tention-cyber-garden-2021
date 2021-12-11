@@ -45,17 +45,17 @@ class Images {
     function getRandomImagesByQ(string $q, int $n): array {
         Debugger::log('I', 'START getRandomImagesByQ. q: ' . $q . ' n: ' . $n);
         $sorts = array(
-                'date-posted-asc',
-                'date-posted-desc',
-                'date-taken-asc',
-                'date-taken-desc',
+//                'date-posted-asc',
+//                'date-posted-desc',
+//                'date-taken-asc',
+//                'date-taken-desc',
                 'interestingness-desc',
 //                'interestingness-asc',
-                'relevance',
+//                'relevance',
         );
         shuffle($sorts);
         Debugger::log('I', 'getRandomImagesByQ. sort: ' . $sorts[0]);
-        $photos = $this->getImagesByQ($q, 50, $sorts[0]);
+        $photos = $this->getImagesByQ($q, 15, $sorts[0]);
         shuffle($photos);
         if ($_ENV['DEBUG'] === 'yes') {
             Debugger::log('I', 'getRandomImagesByQ. ALL photos: ');

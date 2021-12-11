@@ -48,7 +48,7 @@ class ArtGenerator {
         return array(
                 'results' => $urls,
                 'sources' => array (
-                        '$synonymWords' => $synonymWords,
+                        'synonymWords' => $synonymWords,
                         'phrase' => $phrase,
                         'wordsImg' => $wordsImg,
                         'commonImg' => $commonImg,
