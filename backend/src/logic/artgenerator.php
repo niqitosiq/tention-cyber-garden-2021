@@ -19,7 +19,8 @@ class ArtGenerator {
         // Для DanyaAI
         $wordsImg = array(); // ImageURL[]
         $synonymImgs = array(); // ImageURL[]
-        $commonImg = $yimg->getRandomImagesByQ(implode(' ', $words), 1)[0];
+//        $commonImg = $yimg->getRandomImagesByQ(implode(' ', $words), 1)[0];
+        $commonImg = $yimg->getRandomImagesByQ($words[1], 1)[0];
         $phrase = $tt->getCommonPhrase($words);
 
         // Работаю с синонимами

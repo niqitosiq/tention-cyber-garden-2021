@@ -52,7 +52,6 @@ class Images {
                 'relevance',
         );
         shuffle($sorts);
-        echo print_r($sorts[0], true);
         $photos = $this->getImagesByQ($q, 500, $sorts[0]);
         shuffle($photos);
         $photos = array_slice($photos, 0, $n);
@@ -60,7 +59,6 @@ class Images {
         foreach ($photos as $photo) {
             $res[] = new ImageURL($this->getFlickUrl($photo->server, $photo->id, $photo->secret));
         }
-        echo print_r($res, true);
         return $res;
     }
 }

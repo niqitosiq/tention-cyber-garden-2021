@@ -58,7 +58,6 @@ class TextTransformer {
 //                'topic[0]Synonyms' => $topicSynonyms,
 //        ));
         $res = explode('|', $topicSynonyms[0])[0];
-        var_dump('getCommonPrase.res', $res);
         return $res;
     }
 }
