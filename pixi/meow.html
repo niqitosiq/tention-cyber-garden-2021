@@ -1,0 +1,15 @@
+<script>
+    console.log('Hello, world!');
+    let res = [];
+    fetch('./fonts.json')
+            .then(response => response.json())
+            .then(fonts => {
+                for (let font of fonts) {
+                    if (font.subsets.includes('cyrillic')) {
+                        res.push(font.family);
+                    }
+                }
+                console.log('Done! Res:');
+                console.log(res);
+            });
+</script>

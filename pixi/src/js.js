@@ -34,15 +34,14 @@ const skewStyle = new PIXI.TextStyle({
     fill: ['#ffffff'],
     stroke: '#004620',
     fontSize: 60,
-    fontWeight: 'lighter',
     lineJoin: 'round',
     strokeThickness: 12,
 });
 
 for (let i = 0; i < 5; i++) {
-    const skewText = new PIXI.Text('Власть шизам!', skewStyle)
+    const skewText = new PIXI.Text('DVegasa ! 123456 @ Эдуард', skewStyle)
     skewText.skew.set(i * 0.2, -0.1);
-    skewText.anchor.set(0.2 + i*0.1, 0.5);
+    skewText.anchor.set(0.2 + i * 0.1, 0.5);
     skewText.x = 300 + i * 50;
     skewText.y = 480 + i * 60;
     app.stage.addChild(skewText);
