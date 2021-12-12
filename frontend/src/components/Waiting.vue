@@ -4,12 +4,19 @@
       Генерируем для Вас изображение по <span>тегам</span>... Стойте, что? Вы
       <span>правда</span> хотите это увидеть? Ладно...
     </p>
+
+    <assaas background="#56eef4" />
   </div>
 </template>
 
 <script>
+import DoubleBounce from 'vue-loading-spinner/src/components/DoubleBounce';
+
 export default {
   name: 'Waiting',
+  components: {
+    assaas: DoubleBounce,
+  },
 };
 </script>
 
