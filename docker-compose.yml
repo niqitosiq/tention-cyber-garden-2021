@@ -63,8 +63,6 @@ services:
       - '80:80'
     volumes:
       - ./logs:/var/log/nginx/
-    depends_on:
-      - frontend
     networks:
       - webnet
     env_file:

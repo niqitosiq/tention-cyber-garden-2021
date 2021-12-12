@@ -1,5 +1,5 @@
 <template>
-  <form class="search">
+  <form class="search" @submit.prevent="openTags">
     <img src="/loupe.png" />
     <div class="line"></div>
 
@@ -12,7 +12,8 @@
       @input="checkTag"
       @keydown="checkKeyDown"
     />
-    <button class="button" type="button">
+
+    <button class="button" type="submit">
       <span>Генерация</span>
     </button>
   </form>
@@ -54,6 +55,10 @@ export default {
         this.tags = this.tags.slice(0, -1);
       }
     },
+
+    openTags() {
+      this.$router.push({ path: '/view', query: { tags: this.tags } });
+    },
   },
 };
 </script>
@@ -88,19 +93,6 @@ export default {
       font-size: 16px;
     }
   }
-  .button {
-    background-color: #56eef4;
-    border: none;
-    border-radius: 10px;
-    position: absolute;
-    height: calc(100% + 2px);
-    right: -1px;
-    padding: 20px 42px 20px 42px;
-    font-family: 'Rubik';
-    font-weight: 300;
-    font-size: 16px;
-    cursor: pointer;
-  }
   img {
     padding-top: 20px;
     padding-bottom: 20px;
@@ -113,5 +105,19 @@ export default {
     margin-left: 18px;
     flex-shrink: 0;
   }
+}
+
+.button {
+  background-color: #56eef4;
+  border: none;
+  border-radius: 10px;
+  position: absolute;
+  height: calc(100% + 2px);
+  right: -1px;
+  padding: 20px 42px 20px 42px;
+  font-family: 'Rubik';
+  font-weight: 300;
+  font-size: 16px;
+  cursor: pointer;
 }
 </style>
