@@ -85,6 +85,7 @@ export default {
     margin-bottom: 20px;
     width: 1000px;
     height: 1000px;
+    object-fit: cover;
   }
 
   .tags {
