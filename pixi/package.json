@@ -1,0 +1,31 @@
+{
+  "name": "mooring-2d",
+  "version": "1.0.0",
+  "description": "",
+  "main": "js.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack serve --port 8081"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Virg29/mooring.git"
+  },
+  "author": "Virg29",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Virg29/mooring/issues"
+  },
+  "homepage": "https://github.com/Virg29/mooring#readme",
+  "devDependencies": {
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "html-webpack-plugin": "^5.3.1",
+    "source-map-loader": "^3.0.0",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "fontfaceobserver": "^2.1.0"
+  }
+}
