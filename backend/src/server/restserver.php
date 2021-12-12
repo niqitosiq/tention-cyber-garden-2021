@@ -112,15 +112,19 @@ class RestServer {
 
     function test (Request $request, Response $response, array $args): Response {
         $param = $args['param'];
-        $danya = new DanyaAI();
-        $result = $danya->process(
-                ["виртуальное", "помещение", "кинотеатр", "технологии"],
-                new ImageURL('https://live.staticflickr.com/5706/22842871554_f246165ae3_b.jpg'),
-                [new ImageURL('https://live.staticflickr.com/8260/29479118673_19dbdef58a_b.jpg')],
-                'методика',
-        );
-        return $this->response($response, array());
+//        $danya = new DanyaAI();
+//        $result = $danya->process(
+//                ["виртуальное", "помещение", "кинотеатр", "технологии"],
+//                new ImageURL('https://live.staticflickr.com/5706/22842871554_f246165ae3_b.jpg'),
+//                [new ImageURL('https://live.staticflickr.com/8260/29479118673_19dbdef58a_b.jpg')],
+//                'методика',
+//        );
+        $base64 = ArtGenerator::getBase64OfText($param);
+        echo $base64;
+        return $this->response($response, null);
     }
+
+
 }
 
 

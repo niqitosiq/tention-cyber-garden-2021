@@ -59,4 +59,18 @@ class ArtGenerator {
         $res['results'] = $urls;
         return $res;
     }
+
+    static function getBase64OfText (string $text): string {
+        $img = imagecreatefromjpeg(__DIR__ . '\\empty.jpg');
+        $size = 20; $x = 500 - strlen($text)/2 * $size; $y = 50; $angle = 0; $quality = 100;
+        $color = imagecolorallocate($img, 0, 0, 0);
+        $fonts = array(
+                'sylfaen.ttf',
+        );
+        shuffle($fonts);
+        imagettftext($img, $size, $angle, $x, $y, $color, "C:\\Windows\\Fonts\\${fonts[0]}", $text);
+        $pathOutput = __DIR__ . '\\text.jpg';
+        imagejpeg($img, $pathOutput, $quality);
+        return base64_encode(file_get_contents($pathOutput));
+    }
 }
