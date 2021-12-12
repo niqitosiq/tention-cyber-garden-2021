@@ -1,10 +1,5 @@
-FROM python:3.6.1-alpine
-RUN apk update \
-    apk add \
-    build-base \
-    postgresql \
-    postgresql-dev \
-    libpq
+FROM jjanzic/docker-python3-opencv
+
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 COPY ./requirements.txt .
