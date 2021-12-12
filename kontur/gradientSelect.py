@@ -6,6 +6,8 @@ import random
 import string
 import os
 import requests
+import random
+import math
 
 good_images = [];
 
@@ -31,7 +33,7 @@ def writeImg(img,path):
 	cv.imwrite(path,img)
 
 
-def alphaBlendSrc2Dst(pathImg,pathMask):
+def alphaBlendSrc2Dst(pathImg,pathMask,whiteForce = False, disableMaskBluring = False, doInvertMask = False):
 	img = cv.imread(pathImg)
 	mask = cv.imread(pathMask)
 	newShape = [min(img.shape[0],mask.shape[0]),min(img.shape[1],mask.shape[1])];
@@ -40,11 +42,17 @@ def alphaBlendSrc2Dst(pathImg,pathMask):
 	mask = cv.resize(mask, (newShape[1], newShape[0]))
 	# img = img[0:newShape[0],0:newShape[1]]
 	# mask = mask[0:newShape[0],0:newShape[1]]
-	mask = 255 - mask
-	blured = np.full(img.shape,255.0)
-	# blured = cv.GaussianBlur(img, (19, 19), 11)
-
-	mask = cv.GaussianBlur(mask, (19, 19), 11)
+	if(doInvertMask == False):
+		mask = 255 - mask
+	blured = None
+	if(random.random() > 0.5 or whiteForce):
+		blured = np.full(img.shape,255.0)
+	else:
+		blured = cv.GaussianBlur(img, (19, 19), 11)
+	if(disableMaskBluring == False):
+		mask = cv.GaussianBlur(mask, (19, 19), 11)
+	else:
+		mask = cv.GaussianBlur(mask, (5, 5), 11)
 	# cv.invert(img,img)
 	if mask.ndim == 3 and mask.shape[-1] == 3:
 		alpha = mask/255.0
@@ -52,6 +60,54 @@ def alphaBlendSrc2Dst(pathImg,pathMask):
 		alpha = cv.cvtColor(mask, cv.COLOR_GRAY2RGB)/255.0
 	blended = cv.convertScaleAbs(img*(1-alpha) + blured*alpha)
 	return blended
+
+
+def overlay_transparent(background, overlay, x, y):
+
+	background_width = background.shape[1]
+	background_height = background.shape[0]
+
+	if x >= background_width or y >= background_height:
+		return background
+
+	h, w = overlay.shape[0], overlay.shape[1]
+
+	if x + w > background_width:
+		w = background_width - x
+		overlay = overlay[:, :w]
+
+	if y + h > background_height:
+		h = background_height - y
+		overlay = overlay[:h]
+
+	if overlay.shape[2] < 4:
+		overlay = np.concatenate(
+			[
+				overlay,
+				np.ones(
+					(overlay.shape[0], overlay.shape[1], 1), dtype=overlay.dtype) * 255
+			],
+			axis=2,
+		)
+
+	overlay_image = overlay[..., :3]
+	mask = overlay[..., 3:] / 255.0
+
+	background[y:y+h, x:x+w] = (1.0 - mask) * \
+		background[y:y+h, x:x+w] + mask * overlay_image
+
+	return background
+
+def mergeTextNImg(textRaw,imgRaw):
+	new_img = cv.cvtColor(textRaw, cv.COLOR_BGR2BGRA)
+	print(new_img[0][0])
+
+	textMask = new_img[ :, :, 0] == 255
+	
+
+	new_img[textMask] = [255,255,255,0]
+
+	return overlay_transparent(imgRaw, new_img, math.floor(50+random.random()*120), math.floor(50+random.random()*120))
 
 def alphaBlend(img):
 	H,W = img.shape[:2]

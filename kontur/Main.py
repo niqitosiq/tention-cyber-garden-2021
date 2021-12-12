@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request
 import requests
-from gradientSelect import gradientSelect, alphaBlendSrc2Dst, writeImg, get_random_string
+from gradientSelect import gradientSelect, alphaBlendSrc2Dst, writeImg, get_random_string, mergeTextNImg
 from lightMap import lightMap
 import requests
 import os
@@ -17,8 +17,15 @@ def parseUrls(req):
 	urls = []
 	for cortege in json["sources"]["wordsImg"]:
 		urls.append(cortege["url"])
+	base64RawImage = json["sources"]["base64text"]
+	
+	imgdata = base64.b64decode(base64RawImage.encode(encoding="utf-8"))
+	# return base64EncodedNeuro
+	textImgPath = os.getcwd()+"/temp_text/"+str(get_random_string(10)) + '.jpg'
+	with open(textImgPath, 'wb') as f:
+		f.write(imgdata)
 
-	return(("{\"success\":true,\"img\":",urls))
+	return(("{\"success\":true,\"img\":", urls, textImgPath))
 
 
 @app.route("/api/getContour_lightMap", methods=['POST'])
@@ -37,7 +44,7 @@ def gradientSel():
 
 @app.route("/api/generate", methods=['POST'])
 def generatePicture():
-	returnable, urls = parseUrls(request)
+	returnable, urls, textImgPath = parseUrls(request)
 	path = os.getcwd()+"/temp_gen/"+str(get_random_string(10)) + "." + urls[0].split(".")[-1]
 	
 	r = requests.get(urls[0], stream=True)
@@ -50,25 +57,39 @@ def generatePicture():
 	files = {"file": open(path, 'rb')}
 	p = requests.post("http://192.168.43.237:8501/neuro",files=files)
 
+	files2 = {"file": open(path, 'rb')}
+	d = requests.post("http://192.168.43.237:8501/neuro",files=files2)
+
 
 	# return "ahahahhaloh"
 	base64EncodedNeuro = p.content
-
 	imgdata = base64.b64decode(base64EncodedNeuro)
-	# return base64EncodedNeuro
 	neuralImgPath = os.getcwd()+str(get_random_string(10)) + '.jpg'
 	with open(neuralImgPath, 'wb') as f:
 		f.write(imgdata)
+
+	base64EncodedNeuro2 = d.content
+	imgdata2 = base64.b64decode(base64EncodedNeuro2)
+	neuralImgPath2 = os.getcwd()+str(get_random_string(10)) + '.jpg'
+	with open(neuralImgPath2, 'wb') as f:
+		f.write(imgdata2)
+
 
 	jpgAsTextN,lightMapWritten =  lightMap(urls,write=True)
 
 
 	rawImageGenerated = alphaBlendSrc2Dst(neuralImgPath,lightMapWritten)
+	rawImageTextGenerated = alphaBlendSrc2Dst(neuralImgPath2, textImgPath, True,True,True)
+
+	cv.imwrite("./ahahahahahah.jpg",rawImageTextGenerated)
 	
 	os.remove(path)
 	os.remove(neuralImgPath)
+	os.remove(neuralImgPath2)
 
-	retval, buffer = cv.imencode('.jpg', rawImageGenerated)
+	result = mergeTextNImg(rawImageTextGenerated,rawImageGenerated);
+
+	retval, buffer = cv.imencode('.jpg', result)
 	jpg_as_text = base64.b64encode(buffer).decode()
 	return (jpg_as_text)
 
