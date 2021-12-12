@@ -46,6 +46,7 @@ class ArtGenerator {
                         'wordsImg' => $wordsImg,
                         'commonImg' => $commonImg,
                         'synonymImgs' => $synonymImgs,
+                        'base64text' => ArtGenerator::getBase64OfText($phrase),
                 ),
         );
 
@@ -62,13 +63,29 @@ class ArtGenerator {
 
     static function getBase64OfText (string $text): string {
         $img = imagecreatefromjpeg(__DIR__ . '\\empty.jpg');
-        $size = 20; $x = 500 - strlen($text)/2 * $size; $y = 50; $angle = 0; $quality = 100;
+        $size = 40;
+        $x = rand(10, max([50, 700 - strlen($text) * $size]));
+        $y = rand(100, 400);
+        $angle = rand(-15, 15) % 3 === 0 ? 0 : rand(-15, 15);
+        $quality = 100;
         $color = imagecolorallocate($img, 0, 0, 0);
         $fonts = array(
-                'sylfaen.ttf',
+                'f (1).ttf',
+                'f (2).ttf',
+                'f (3).ttf',
+                'f (4).ttf',
+                'f (5).ttf',
+                'f (6).ttf',
+                'f (7).ttf',
+                'f (8).ttf',
+                'f (9).ttf',
+                'f (10).ttf',
+                'f (11).ttf',
+                'f (12).ttf',
+                'f (13).ttf',
         );
         shuffle($fonts);
-        imagettftext($img, $size, $angle, $x, $y, $color, "C:\\Windows\\Fonts\\${fonts[0]}", $text);
+        imagettftext($img, $size, $angle, $x, $y, $color, __DIR__ . "\\fonts\\${fonts[0]}", $text);
         $pathOutput = __DIR__ . '\\text.jpg';
         imagejpeg($img, $pathOutput, $quality);
         return base64_encode(file_get_contents($pathOutput));
