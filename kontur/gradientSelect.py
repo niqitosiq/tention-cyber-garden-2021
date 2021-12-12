@@ -41,8 +41,8 @@ def alphaBlendSrc2Dst(pathImg,pathMask):
 	# img = img[0:newShape[0],0:newShape[1]]
 	# mask = mask[0:newShape[0],0:newShape[1]]
 	mask = 255 - mask
-	# blured = np.full(img.shape,255.0)
-	blured = cv.GaussianBlur(img, (19, 19), 11)
+	blured = np.full(img.shape,255.0)
+	# blured = cv.GaussianBlur(img, (19, 19), 11)
 
 	mask = cv.GaussianBlur(mask, (19, 19), 11)
 	# cv.invert(img,img)

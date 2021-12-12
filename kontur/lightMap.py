@@ -75,7 +75,7 @@ def lightMap(urls, write=False, pathInternalFile=None, rawImage = False):
 	os.remove(path)
 	retval, buffer = cv.imencode('.jpg', just_white)
 	jpg_as_text = base64.b64encode(buffer).decode()
-	return jpg_as_text
+	return (jpg_as_text,pathW)
 
 
 
