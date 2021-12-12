@@ -29,7 +29,7 @@ class DanyaAI {
             array $magic
     ): array { // ImageBase64[] (size=?)
         Debugger::log('DAI', print_r($magic, true));
-        $response = $this->danyaCall('getContour_lightMap', $magic);
+        $response = $this->danyaCall('generate', $magic);
         $body = $response->getBody();
 //        echo print_r($response, true);
         // echo $body;
